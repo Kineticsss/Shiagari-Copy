@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>SHIAGARI · Idea Factory</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="idea.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+    <h1>SHIAGARI</h1>
+    <nav>
+      <a href="../landing/landing.html"><i class="fas fa-project-diagram"></i> <span>Projects</span></a>
+      <a href="../idea/idea.html" class="active"><i class="fas fa-lightbulb"></i> <span>Idea Factory</span></a>
+      <a href="../progress/progress.html"><i class="fas fa-chart-line"></i> <span>Progress Tracker</span></a>
+      <a href="../roadmap/roadmap.html"><i class="fas fa-map"></i> <span>Roadmap</span></a>
+      <a href="../postboard/postboard.html"><i class="fas fa-newspaper"></i> <span>Post Board</span></a>
+      <a href="../message/message.html"><i class="fas fa-comments"></i> <span>Chats</span></a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <h2><i class="fas fa-lightbulb"></i> Idea Factory</h2>
+      <div class="stats-badge">
+        <i class="fas fa-brain"></i>
+        <span id="ideaCount">0</span> ideas brewing
+      </div>
+    </header>
+
+    <section class="idea-grid" id="ideaGrid"></section>
+
+    <div class="floating-add" id="floatingAddBtn">
+      <i class="fas fa-plus"></i>
+    </div>
+  </main>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal" id="ideaModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle"><i class="fas fa-lightbulb"></i> New Idea</h3>
+        <button class="modal-close" id="closeModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label><i class="fas fa-heading"></i> Idea Title</label>
+          <input type="text" id="ideaTitle" placeholder="e.g., AI-powered design tool" maxlength="60">
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-align-left"></i> Description</label>
+          <textarea id="ideaDesc" rows="3" placeholder="What's the idea about?"></textarea>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-tag"></i> Category</label>
+          <select id="ideaCategory">
+            <option value="sketch">🎨 Sketch</option>
+            <option value="flowchart">📊 Flowchart</option>
+            <option value="color">🎨 Color Palette</option>
+            <option value="design">✨ Design</option>
+            <option value="tech">💻 Tech</option>
+            <option value="business">📈 Business</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-user"></i> Author</label>
+          <input type="text" id="ideaAuthor" placeholder="Your name" value="Creative User">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="cancelModalBtn">Cancel</button>
+        <button class="btn-primary" id="saveIdeaBtn">Save Idea</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail View Modal -->
+  <div class="modal" id="detailModal">
+    <div class="modal-content detail-modal">
+      <div class="modal-header">
+        <h3 id="detailTitle"><i class="fas fa-lightbulb"></i> Idea Details</h3>
+        <button class="modal-close" id="closeDetailBtn">&times;</button>
+      </div>
+      <div class="modal-body" id="detailBody"></div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="closeDetailModalBtn">Close</button>
+        <button class="btn-primary" id="editFromDetailBtn">Edit Idea</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toastMsg">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastText">Idea saved!</span>
+  </div>
+
+  <script src="idea.js"></script>
+</body>
+</html>
