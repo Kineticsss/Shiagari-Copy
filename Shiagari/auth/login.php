@@ -4,6 +4,8 @@ require_once __DIR__ . '/../config/http.php';
 require_once __DIR__ . '/../config/session.php';
 require_once __DIR__ . '/../config/database.php';
 
+error_log('API KEY: ' . FIREBASE_API_KEY);
+
 function loginUser(string $email, string $password): array {
     $url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' . FIREBASE_API_KEY;
 

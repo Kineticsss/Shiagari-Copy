@@ -26,120 +26,127 @@
   <main class="main">
     <header class="topbar">
       <h2><i class="fas fa-user-circle"></i> Profile</h2>
-      <a href="profile.html" class="profile-button" title="Profile"><span>U</span></a>
+      <a href="profile.html" class="profile-button" id="topbarAvatar" title="Profile"><span>U</span></a>
     </header>
 
     <section class="profile-card">
-      <div class="profile-avatar">U</div>
+      <div class="profile-avatar" id="profileAvatar">U</div>
       <div class="profile-content">
-        <h3 id="profileFullName">Creative User</h3>
-        <p class="profile-username" id="profileUsername">@creative_user</p>
-        <p class="profile-role">Product enthusiast · Project lead</p>
+        <h3 id="profileFullName">Loading...</h3>
+        <p class="profile-username" id="profileUsername">@...</p>
+        <p class="profile-role" id="profileRole">Team Member</p>
 
         <div class="profile-details">
           <div>
             <span>Email</span>
-            <strong id="profileEmail">user@example.com</strong>
+            <strong id="profileEmail">...</strong>
           </div>
           <div>
             <span>Member since</span>
-            <strong id="profileMemberSince">May 2026</strong>
+            <strong id="profileMemberSince">...</strong>
           </div>
           <div>
-            <span>Teams</span>
-            <strong>Design, Product, Growth</strong>
+            <span>Role</span>
+            <strong id="profileRoleDetail">...</strong>
           </div>
         </div>
-        <button id="logoutBtn" class="logout-btn">Log Out</button>
+        <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Log Out</button>
       </div>
     </section>
   </main>
 
   <script>
-    // Fetch user profile from database API on page load
+    // Base path detection - works whether app is at root or subdirectory
+    function getBasePath() {
+      // profile.html is at /profile/profile.html
+      // API is at /api/profile.php relative to project root
+      return '../';
+    }
+
     async function loadUserProfile() {
       try {
-        const response = await fetch('../api/profile.php', {
+        const response = await fetch(getBasePath() + 'api/profile.php', {
           method: 'GET',
           credentials: 'same-origin',
           headers: { 'Accept': 'application/json' }
         });
-        
+
         if (!response.ok) {
-          throw new Error('Failed to load profile');
+          throw new Error('HTTP ' + response.status);
         }
-        
+
         const result = await response.json();
-        
-        if (!result.success || !result.data) {
-          // Fallback to localStorage if API fails
-          fallbackToLocalStorage();
+
+        // API returns { success: true, user: {...} }
+        if (result.success && result.user) {
+          populateProfile(result.user);
+          // Cache to localStorage as backup
+          cacheUserToLocalStorage(result.user);
           return;
         }
-        
-        const user = result.data;
-        populateProfile(user);
+
+        // Not authenticated — redirect to login
+        if (response.status === 401 || (result && result.error === 'Not authenticated')) {
+          window.location.href = getBasePath() + 'index.php';
+          return;
+        }
+
+        throw new Error(result.error || 'Failed to load profile');
       } catch (error) {
-        console.error('Profile load error:', error);
-        // Fallback to localStorage on error
+        console.warn('API profile load failed, trying localStorage fallback:', error.message);
         fallbackToLocalStorage();
       }
     }
-    
-    // Fallback: Use localStorage when API fails
-    function fallbackToLocalStorage() {
-      const fullName = localStorage.getItem('shiagari_user_full_name') || localStorage.getItem('shiagari_user_name') || 'Creative User';
-      const username = localStorage.getItem('shiagari_user_username') ||
-        (localStorage.getItem('shiagari_user_name') || 'creative_user')
-          .trim()
-          .toLowerCase()
-          .replace(/\s+/g, '_');
-      const email = localStorage.getItem('shiagari_user_email') || 'user@example.com';
-      const memberSince = localStorage.getItem('shiagari_user_member_since') || 'May 2026';
-      
-      populateProfile({
-        full_name: fullName,
-        username: username,
-        email: email,
-        member_since: memberSince
-      });
+
+    function cacheUserToLocalStorage(user) {
+      if (user.full_name) localStorage.setItem('shiagari_user_full_name', user.full_name);
+      if (user.username)  localStorage.setItem('shiagari_user_username', user.username);
+      if (user.email)     localStorage.setItem('shiagari_user_email', user.email);
+      if (user.member_since) localStorage.setItem('shiagari_user_member_since', user.member_since);
+      if (user.role)      localStorage.setItem('shiagari_user_role', user.role);
     }
-    
-    // Populate profile fields with user data
+
+    function fallbackToLocalStorage() {
+      const fullName    = localStorage.getItem('shiagari_user_full_name') || localStorage.getItem('shiagari_user_name') || 'User';
+      const username    = localStorage.getItem('shiagari_user_username') || '';
+      const email       = localStorage.getItem('shiagari_user_email') || '';
+      const memberSince = localStorage.getItem('shiagari_user_member_since') || '';
+      const role        = localStorage.getItem('shiagari_user_role') || 'user';
+
+      populateProfile({ full_name: fullName, username, email, member_since: memberSince, role });
+    }
+
     function populateProfile(user) {
-      const fullName = user.full_name || 'Creative User';
-      const username = user.username || (fullName.trim().toLowerCase().replace(/\s+/g, '_')) || 'creative_user';
-      const email = user.email || 'user@example.com';
-      const memberSince = user.member_since || 'May 2026';
-      
+      const fullName    = user.full_name    || 'User';
+      const username    = user.username     || '';
+      const email       = user.email        || '';
+      const memberSince = user.member_since || '';
+      const role        = user.role         || 'user';
+
       const initials = fullName
         .split(' ')
         .filter(Boolean)
         .slice(0, 2)
-        .map((segment) => segment[0].toUpperCase())
+        .map(s => s[0].toUpperCase())
         .join('') || 'U';
-      
-      // Update profile card
-      document.querySelector('.profile-avatar').textContent = initials;
-      document.querySelector('.profile-button span').textContent = initials;
-      document.getElementById('profileFullName').textContent = fullName;
-      document.getElementById('profileUsername').textContent = `@${username}`;
-      document.getElementById('profileEmail').textContent = email;
+
+      document.getElementById('profileAvatar').textContent      = initials;
+      document.getElementById('topbarAvatar').querySelector('span').textContent = initials;
+      document.getElementById('profileFullName').textContent    = fullName;
+      document.getElementById('profileUsername').textContent    = username ? '@' + username : '';
+      document.getElementById('profileEmail').textContent       = email;
       document.getElementById('profileMemberSince').textContent = memberSince;
+      document.getElementById('profileRoleDetail').textContent  = role.charAt(0).toUpperCase() + role.slice(1);
+      document.getElementById('profileRole').textContent        = role.charAt(0).toUpperCase() + role.slice(1);
     }
-    
-    // Logout handler
-    document.getElementById('logoutBtn').addEventListener('click', function() {
-      const confirmed = confirm('Are you sure you want to log out?');
-      if (confirmed) {
-        // Clear localStorage
+
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+      if (confirm('Are you sure you want to log out?')) {
         localStorage.clear();
-        // Redirect to logout
-        window.location.href = '../auth/logout.php';
+        window.location.href = getBasePath() + 'auth/logout.php';
       }
     });
-    
-    // Load profile when page is ready
+
     document.addEventListener('DOMContentLoaded', loadUserProfile);
   </script>
 </body>
