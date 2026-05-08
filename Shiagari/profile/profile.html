@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>SHIAGARI · Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+    <h1>SHIAGARI</h1>
+    <nav>
+      <a href="../landing/landing.html"><i class="fas fa-project-diagram"></i> <span>Projects</span></a>
+      <a href="../idea/idea.html"><i class="fas fa-lightbulb"></i> <span>Idea Factory</span></a>
+      <a href="../progress/progress.html"><i class="fas fa-chart-line"></i> <span>Progress Tracker</span></a>
+      <a href="../roadmap/roadmap.html"><i class="fas fa-map"></i> <span>Roadmap</span></a>
+      <a href="../postboard/postboard.html"><i class="fas fa-newspaper"></i> <span>Post Board</span></a>
+      <a href="../message/message.html"><i class="fas fa-comments"></i> <span>Chats</span></a>
+      <a href="profile.html" class="active"><i class="fas fa-user-circle"></i> <span>Profile</span></a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <h2><i class="fas fa-user-circle"></i> Profile</h2>
+      <a href="profile.html" class="profile-button" title="Profile"><span>U</span></a>
+    </header>
+
+    <section class="profile-card">
+      <div class="profile-avatar">U</div>
+      <div class="profile-content">
+        <h3 id="profileFullName">Creative User</h3>
+        <p class="profile-username" id="profileUsername">@creative_user</p>
+        <p class="profile-role">Product enthusiast · Project lead</p>
+
+        <div class="profile-details">
+          <div>
+            <span>Email</span>
+            <strong id="profileEmail">user@example.com</strong>
+          </div>
+          <div>
+            <span>Member since</span>
+            <strong id="profileMemberSince">May 2026</strong>
+          </div>
+          <div>
+            <span>Teams</span>
+            <strong>Design, Product, Growth</strong>
+          </div>
+        </div>
+        <button id="logoutBtn" class="logout-btn">Log Out</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const fullName = localStorage.getItem('shiagari_user_full_name') || localStorage.getItem('shiagari_user_name') || 'Creative User';
+    const username = localStorage.getItem('shiagari_user_username') ||
+      (localStorage.getItem('shiagari_user_name') || 'creative_user')
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, '_');
+    const email = localStorage.getItem('shiagari_user_email') || 'user@example.com';
+    const memberSince = localStorage.getItem('shiagari_user_member_since') || 'May 2026';
+    const initials = fullName
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((segment) => segment[0].toUpperCase())
+      .join('') || 'U';
+
+    document.querySelector('.profile-avatar').textContent = initials;
+    document.querySelector('.profile-button span').textContent = initials;
+    document.getElementById('profileFullName').textContent = fullName;
+    document.getElementById('profileUsername').textContent = `@${username}`;
+    document.getElementById('profileEmail').textContent = email;
+    document.getElementById('profileMemberSince').textContent = memberSince;
+
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      const confirmed = confirm('Are you sure you want to log out?');
+      if (confirmed) {
+        window.location.href = '../auth/logout.php';
+      }
+    });
+  </script>
+</body>
+</html>
