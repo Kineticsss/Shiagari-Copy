@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>SHIAGARI · Chats</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="message.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+    <h1>SHIAGARI</h1>
+    <nav>
+      <a href="../landing/landing.html"><i class="fas fa-project-diagram"></i> <span>Projects</span></a>
+      <a href="../idea/idea.php"><i class="fas fa-lightbulb"></i> <span>Idea Factory</span></a>
+      <a href="../progress/progress.php"><i class="fas fa-chart-line"></i> <span>Progress Tracker</span></a>
+      <a href="../roadmap/roadmap.php"><i class="fas fa-map"></i> <span>Roadmap</span></a>
+      <a href="../postboard/postboard.php"><i class="fas fa-newspaper"></i> <span>Post Board</span></a>
+      <a href="../message/message.php" class="active"><i class="fas fa-comments"></i> <span>Chats</span></a>
+    </nav>
+  </aside>
+
+  <!-- Chat Sidebar -->
+  <div class="chat-sidebar">
+    <div class="chat-sidebar-header">
+      <i class="fas fa-users"></i> Conversations
+    </div>
+
+    <div class="chat-user-search">
+      <div class="chat-user-search-label">Find a user</div>
+      <input id="userSearchInput" type="text" placeholder="Email, username, or name" autocomplete="off" />
+      <div id="userSearchResults" class="chat-user-search-results"></div>
+    </div>
+
+    <div class="chat-list" id="chatList">
+      <!-- Conversations will be injected here -->
+    </div>
+  </div>
+
+
+  <!-- Chat Window -->
+  <div class="chat-window" id="chatWindow">
+    <header class="topbar">
+      <h2><i class="fas fa-comments"></i> Chats</h2>
+      <a href="../profile/profile.html" class="profile-button" title="Profile"><span>U</span></a>
+    </header>
+    <div class="chat-header" id="dragHandle">
+      <div class="chat-user-info">
+        <div class="chat-avatar" id="currentAvatar">👤</div>
+        <span id="currentUserName">Select a chat</span>
+      </div>
+      <div class="chat-header-actions">
+        <button id="minimizeBtn" class="minimize-btn"><i class="fas fa-minus"></i></button>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="empty-chat">
+        <i class="fas fa-comments"></i>
+        <p>Select a conversation to start messaging</p>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <input type="text" id="messageInput" placeholder="Type a message..." disabled>
+      <button id="sendBtn" disabled><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <div id="toastMsg" class="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastText">Message sent!</span>
+  </div>
+
+  <script src="message.js"></script>
+</body>
+</html>
